@@ -2,9 +2,12 @@
 
 ## Truffle Commands
 truffle migrate --reset --network goerli
+
 truffle migrate --reset --network development
 
+
 truffle dashboard
+
 truffle migrate --reset --network dashboard
 
 
