@@ -1,0 +1,11 @@
+{
+  "name": "truffletest",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "David Quenet <david@knx-lab.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@truffle/hdwallet-provider": "^2.1.0",
+    "dotenv": "^16.0.3"
+  }
+}
