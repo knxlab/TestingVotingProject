@@ -1,3 +1,5 @@
+const HDWalletProvider = require('@truffle/hdwallet-provider');
+require('dotenv').config();
 
 module.exports = {
 
@@ -23,9 +25,22 @@ module.exports = {
     // websocket: true        // Enable EventEmitter interface for web3 (default: false)
     // },
     // Useful for deploying to a public network.
+    goerli: {
+      provider: function() {
+        return new HDWalletProvider({
+          mnemonic: {
+            phrase: `${process.env.MNEMONIC}`
+          },
+          providerOrUrl: `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY}`,
+          addressIndex: 1
+        });
+      },
+      from: "0xbc5A3940775374568227884b5Cb1F50d4823212E",
+      network_id: 5
+    }
     // NB: It's important to wrap the provider as a function.
     // ropsten: {
-    // provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/YOUR-PROJECT-ID`),
+    //provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/YOUR-PROJECT-ID`),
     // network_id: 3,       // Ropsten's id
     // gas: 5500000,        // Ropsten has a lower block limit than mainnet
     // confirmations: 2,    // # of confs to wait between deployments. (default: 0)

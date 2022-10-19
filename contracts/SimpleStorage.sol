@@ -11,7 +11,7 @@ contract SimpleStorage {
 
     uint256 number;
 
-    constructor(uint _number) {
+    constructor(uint _number) payable {
         number = _number;
     }
 
