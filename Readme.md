@@ -5,12 +5,14 @@
 run a local ganache on port 7545 and network
 
 ```json
-networks: {
-    development: {
-      host: "127.0.0.1",     
-      port: 7545,            
-      network_id: "5777"
-    }
+{
+	networks: {
+	    development: {
+	      host: "127.0.0.1",     
+	      port: 7545,            
+	      network_id: "5777"
+	    }
+	}
 }
 ```
 
