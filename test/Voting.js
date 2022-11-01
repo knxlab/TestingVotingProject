@@ -70,12 +70,22 @@ async function createVotingInstanceEndedWithDraw(owner, voters) {
 }
 
 
+
 contract("Voting", accounts => {
 
   const _owner = accounts[0];
   const _voters = accounts.filter((a, i) => i !== 0);
 
   let votingInstance;
+
+  // usage =>
+  /*
+    it("...Status should be RegisteringVoters", StatusShouldBe(Voting.WorkflowStatus.RegisteringVoters));
+  */
+  const StatusShouldBe = (statustoTest) => async () => {
+    const status = await votingInstance.workflowStatus.call();
+    expect(status).to.be.bignumber.equal(new BN(statustoTest));
+  }
 
   before(async () => {
     votingInstance = await createVotingInstance(_owner);
@@ -150,6 +160,8 @@ contract("Voting", accounts => {
     it("...owner cannot end voting session", cannotEndVotingSession(_owner));
     it("...owner cannot tally votes", cannotTallyVotes(_owner));
 
+    it("...Status should be RegisteringVoters", StatusShouldBe(Voting.WorkflowStatus.RegisteringVoters));
+
     it("...owner can add a new voter.", async () => {
       expectEvent(
         await votingInstance.addVoter(_voters[0], { from: _owner }),
@@ -173,7 +185,7 @@ contract("Voting", accounts => {
       'Voting session havent started yet',
     ));
 
-    it("...voter can get a voter", async () => {
+    it("...voter is registered but has not voted", async () => {
       const voter = await votingInstance.getVoter(_voters[0], { from: _voters[0] });
       expect(voter.isRegistered).to.be.true;
       expect(voter.hasVoted).to.be.false;
@@ -190,6 +202,8 @@ contract("Voting", accounts => {
         }
       );
     });
+
+    it("...Status should be ProposalsRegistrationStarted", StatusShouldBe(Voting.WorkflowStatus.ProposalsRegistrationStarted));
   })
 
 
@@ -244,6 +258,8 @@ contract("Voting", accounts => {
       );
     });
 
+    it("...Status should be ProposalsRegistrationEnded", StatusShouldBe(Voting.WorkflowStatus.ProposalsRegistrationEnded));
+
     it("...voter cannot add a proposal anymore.", async () => {
       await expectRevert(
         votingInstance.addProposal("new proposal", { from: _voters[0] }),
@@ -261,6 +277,8 @@ contract("Voting", accounts => {
         }
       );
     });
+
+    it("...Status should be VotingSessionStarted", StatusShouldBe(Voting.WorkflowStatus.VotingSessionStarted));
   })
 
   describe("When Voting Status is VotingSessionStarted", () => {
@@ -318,6 +336,8 @@ contract("Voting", accounts => {
       );
     });
 
+    it("...Status should be VotingSessionEnded", StatusShouldBe(Voting.WorkflowStatus.VotingSessionEnded));
+
     it("...voter cannot vote anymore.", () => expectRevert(
       votingInstance.setVote(1, { from: _voters[2] }),
       'Voting session havent started yet',
@@ -333,6 +353,8 @@ contract("Voting", accounts => {
         }
       );
     });
+
+    it("...Status should be VotesTallied", StatusShouldBe(Voting.WorkflowStatus.VotesTallied));
 
     it("...owner cannot tally votes again", cannotTallyVotes(_owner));
   });
