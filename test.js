@@ -1,1 +1,0 @@
-let sss = SimpleStorage.deployed();
